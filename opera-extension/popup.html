@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BioSync for Opera</title>
+    <link rel="stylesheet" href="popup.css" />
+    <script defer src="popup.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <span class="mark">↗</span>
+        <div>
+          <h1>BioSync</h1>
+          <p>Opera auto-sync</p>
+        </div>
+        <span id="connection" class="dot" title="Companion status"></span>
+      </header>
+
+      <section class="status-card">
+        <span class="label">STATUS</span>
+        <p id="message">Checking the local companion…</p>
+      </section>
+
+      <section class="track-card">
+        <span class="label">NOW PLAYING</span>
+        <strong id="track">Nothing detected</strong>
+        <span id="artist">Connect Spotify in local setup.</span>
+      </section>
+
+      <section>
+        <label class="switch-row" for="enabled">
+          <span>
+            <strong>Automatic sync</strong>
+            <small>Only writes after a stable song is detected.</small>
+          </span>
+          <input id="enabled" type="checkbox" />
+          <span class="switch" aria-hidden="true"></span>
+        </label>
+      </section>
+
+      <section id="pending-wrap" class="pending hidden">
+        <span class="label">NEXT BIO</span>
+        <p id="pending"></p>
+      </section>
+
+      <div class="buttons">
+        <button id="setup" class="primary">Open local setup</button>
+        <button id="tiktok" class="secondary">Open TikTok</button>
+        <button id="refresh" class="quiet">Refresh status</button>
+      </div>
+
+      <p class="note">Keep Opera open, sign into TikTok yourself, and leave a TikTok tab available for BioSync.</p>
+    </main>
+  </body>
+</html>
