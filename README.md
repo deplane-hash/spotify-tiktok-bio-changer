@@ -45,7 +45,7 @@ After enabling Pages with GitHub Actions:
 - There is no backend and no analytics.
 - No Spotify Client Secret is ever requested.
 - The access token and refresh token are kept in sessionStorage and are removed when you disconnect.
-- Only the Spotify scopes needed for this experience are requested: user-read-currently-playing and user-read-private.
+- Only the Spotify scope needed for this experience is requested: user-read-currently-playing.
 - The app does not store a Spotify catalog or playback history.
 - Spotify track metadata is attributed through the link back to Spotify.
 
