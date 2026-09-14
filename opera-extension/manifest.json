@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "BioSync for Opera",
+  "version": "0.1.0",
+  "description": "Synchronise a stable Spotify track to your TikTok bio through a local BioSync companion.",
+  "permissions": ["alarms", "storage", "tabs"],
+  "host_permissions": [
+    "http://127.0.0.1:38473/*",
+    "https://www.tiktok.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "BioSync",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.tiktok.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "minimum_chrome_version": "116"
+}
