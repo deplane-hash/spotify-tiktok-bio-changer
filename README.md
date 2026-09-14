@@ -2,11 +2,16 @@
 
 BioSync turns the track currently playing on Spotify into a TikTok-ready bio.
 
-The app is intentionally a small, dependency-free static site. It uses Spotify's Authorization Code with PKCE flow in the browser, reads the current playback, formats the track and artist within a configurable character limit, and gives you a one-click copy action.
+There are two ways to use it:
 
-## Current product boundary
+- The [GitHub Pages dashboard](https://deplane-hash.github.io/spotify-tiktok-bio-changer/) is the lightweight manual workflow: connect Spotify, generate a bio, copy it, then paste it in TikTok.
+- The **experimental Opera edition** adds an opt-in local companion and browser extension that can update a signed-in TikTok tab automatically. Start with [the Opera setup guide](OPERA_SETUP.md).
 
-TikTok does not currently provide a public API endpoint for editing a user's profile bio. BioSync therefore uses the safest useful workflow:
+## Dashboard: manual workflow
+
+The public dashboard is intentionally a small, dependency-free static site. It uses Spotify's Authorization Code with PKCE flow in the browser, reads the current playback, formats the track and artist within a configurable character limit, and gives you a one-click copy action.
+
+TikTok does not currently provide a public API endpoint for editing a user's profile bio. The dashboard therefore uses the safest useful workflow:
 
 1. Connect Spotify.
 2. Play a track.
@@ -15,23 +20,37 @@ TikTok does not currently provide a public API endpoint for editing a user's pro
 
 The TikTok button opens the official site; it does not pretend that a profile update succeeded.
 
-## Local setup
+## Opera automatic sync: experimental
+
+The Opera version is deliberately local-first:
+
+- The `local-companion` starts on your computer at `http://127.0.0.1:38473`.
+- It reads only Spotify’s current track with the `user-read-currently-playing` scope.
+- The `opera-extension` has to be installed manually in Opera and its **Automatic sync** switch defaults to off.
+- TikTok credentials are never collected or stored; you sign in to TikTok yourself.
+- Because TikTok has no public bio-write API, the extension uses the TikTok website’s own Edit profile controls and can break if TikTok changes that UI.
+
+Read [OPERA_SETUP.md](OPERA_SETUP.md) for exact Spotify redirect-URI, Opera installation, start/stop, and package-download steps.
+
+## Dashboard local setup
 
 1. Create an app in the Spotify Developer Dashboard.
 2. Copy its Client ID. Do not use or expose the Client Secret.
 3. Serve this folder over HTTP. For example, with Python:
 
+   ```text
    python -m http.server 4173
+   ```
 
-4. Open http://127.0.0.1:4173/ in your browser.
+4. Open `http://127.0.0.1:4173/` in your browser.
 5. Add the exact URL shown as Redirect URI in the Spotify app settings.
 6. Paste your Client ID into BioSync and connect.
 
-Spotify redirect URIs must match exactly. For local development, use the explicit loopback address http://127.0.0.1:4173/ rather than localhost. A hosted deployment must use HTTPS.
+Spotify redirect URIs must match exactly. For local development, use the explicit loopback address `http://127.0.0.1:4173/` rather than `localhost`. A hosted deployment must use HTTPS.
 
 ## GitHub Pages deployment
 
-The included workflow in .github/workflows/pages.yml deploys the repository as a static GitHub Pages site whenever main changes.
+The included workflow in `.github/workflows/pages.yml` deploys the repository as a static GitHub Pages site whenever `main` changes.
 
 After enabling Pages with GitHub Actions:
 
@@ -42,19 +61,16 @@ After enabling Pages with GitHub Actions:
 
 ## Privacy and security
 
-- There is no backend and no analytics.
+- There is no analytics or Spotify catalog/history storage.
 - No Spotify Client Secret is ever requested.
-- The access token and refresh token are kept in sessionStorage and are removed when you disconnect.
-- Only the Spotify scope needed for this experience is requested: user-read-currently-playing.
-- The app does not store a Spotify catalog or playback history.
-- Spotify track metadata is attributed through the link back to Spotify.
-
-For a production public launch, consider adding a small backend for stronger token lifecycle control, a Content Security Policy, automated browser tests, and a supported TikTok integration if TikTok exposes a write endpoint in the future.
+- The dashboard’s Spotify tokens live in `sessionStorage` and are removed when you disconnect.
+- The Opera companion keeps its Spotify tokens in memory only; restarting it requires reconnecting Spotify.
+- The companion is reachable only on your local computer’s loopback address.
+- You can turn Opera automatic sync off or remove the extension at any time.
 
 ## Roadmap
 
-- Add a backend option for durable, encrypted token sessions.
-- Add a preview of the TikTok profile layout.
-- Add more bio templates and user-defined templates.
-- Add tests for Unicode length, truncation, token expiry, and 204/401/429 Spotify responses.
-- Re-check TikTok developer capabilities before attempting automatic profile updates.
+- Add stable end-to-end tests using a test profile/page.
+- Add an optional configurable poll interval and a preview-only mode.
+- Improve TikTok selector recovery when the website UI changes.
+- Re-check TikTok developer capabilities before replacing browser automation with a supported API.

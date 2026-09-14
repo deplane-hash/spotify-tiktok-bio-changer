@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BioSync local setup</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <span class="mark">↗</span>
+        <div>
+          <p class="eyebrow">LOCAL COMPANION</p>
+          <h1>BioSync setup</h1>
+        </div>
+        <span id="connection" class="badge">OFFLINE</span>
+      </header>
+
+      <section class="card">
+        <h2>1. Spotify connection</h2>
+        <p class="muted">Use the Client ID from a Spotify Developer app. Do not enter a Client Secret.</p>
+        <label>Spotify Client ID<input id="client-id" autocomplete="off" placeholder="Paste your Client ID" /></label>
+        <div class="callback">
+          <span>Register this exact Spotify redirect URI</span>
+          <code>http://127.0.0.1:38473/auth/spotify/callback</code>
+        </div>
+        <button id="save" class="secondary">Save settings</button>
+        <a id="connect" class="primary" href="/auth/spotify/start">Connect Spotify</a>
+      </section>
+
+      <section class="card">
+        <h2>2. Bio rules</h2>
+        <label>Permanent bio text<textarea id="base-bio" rows="2" placeholder="Optional. The now-playing line appears below this text."></textarea></label>
+        <label>Now-playing template<input id="template" value="🎧 {track} — {artist}" /></label>
+        <div class="grid">
+          <label>Character limit<input id="max-length" type="number" min="10" max="150" value="80" /></label>
+          <label>Song must play for<input id="stable-seconds" type="number" min="10" max="300" value="25" /></label>
+        </div>
+        <p class="muted small">BioSync updates only after a track has played for this long. It ignores paused playback.</p>
+      </section>
+
+      <section class="card status">
+        <h2>3. Status</h2>
+        <p id="message">Checking Spotify…</p>
+        <p id="track" class="track">Nothing playing</p>
+        <p id="sync" class="muted"></p>
+      </section>
+
+      <footer>Keep this local companion running while automatic sync is enabled in Opera.</footer>
+    </main>
+  </body>
+</html>
