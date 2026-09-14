@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#09090b" />
+    <meta name="description" content="Turn your current Spotify track into a TikTok-ready bio." />
+    <title>BioSync — Spotify to TikTok bio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="BioSync home">
+        <span class="brand-mark" aria-hidden="true">↗</span>
+        <span>BioSync</span>
+      </a>
+      <span class="header-note">spotify → tiktok</span>
+    </header>
+
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="eyebrow"><span class="pulse"></span> LIVE PROFILE TOOL</div>
+        <h1 id="page-title">Let your bio<br /><em>keep up.</em></h1>
+        <p class="hero-copy">
+          Pull the song you are listening to on Spotify, turn it into a clean TikTok bio,
+          and paste it in seconds.
+        </p>
+      </section>
+
+      <section class="notice" aria-label="Important limitation">
+        <div class="notice-icon" aria-hidden="true">i</div>
+        <div>
+          <strong>One honest limitation</strong>
+          <p>TikTok does not currently expose a public API for changing a profile bio. BioSync makes the update fast: copy the generated bio, open TikTok, and paste it yourself.</p>
+        </div>
+      </section>
+
+      <section class="setup-card card" aria-labelledby="setup-title">
+        <div class="section-heading">
+          <div>
+            <span class="step">01</span>
+            <h2 id="setup-title">Connect Spotify</h2>
+          </div>
+          <span id="connection-badge" class="badge badge-muted">NOT CONNECTED</span>
+        </div>
+        <p class="muted">Use your Spotify Client ID. It is public by design; never paste a Client Secret here.</p>
+        <form id="setup-form" class="setup-form">
+          <label class="field">
+            <span>Spotify Client ID</span>
+            <input id="client-id" name="client-id" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 1a2b3c4d..." required />
+          </label>
+          <div class="redirect-row">
+            <span class="field-label">Redirect URI</span>
+            <code id="redirect-uri"></code>
+            <button id="copy-redirect" class="text-button" type="button">Copy</button>
+          </div>
+          <button id="connect-button" class="button button-primary" type="submit">
+            <span>Connect Spotify</span><span aria-hidden="true">↗</span>
+          </button>
+        </form>
+        <p id="setup-help" class="form-message" role="status"></p>
+      </section>
+
+      <section id="app-panel" class="app-panel hidden" aria-live="polite">
+        <div class="section-heading live-heading">
+          <div>
+            <span class="step">02</span>
+            <h2>Your current track</h2>
+          </div>
+          <button id="refresh-button" class="text-button" type="button">Refresh now <span aria-hidden="true">↻</span></button>
+        </div>
+
+        <article class="now-playing card">
+          <div class="album-frame">
+            <div class="album-placeholder" id="album-placeholder" aria-hidden="true">♪</div>
+            <img id="album-art" class="album-art hidden" alt="" />
+          </div>
+          <div class="track-copy">
+            <span id="playback-label" class="eyebrow">WAITING FOR PLAYBACK</span>
+            <h3 id="track-title">Nothing playing yet</h3>
+            <p id="track-artist">Start a song on Spotify and refresh.</p>
+            <p id="track-album" class="muted small"></p>
+            <a id="track-link" class="spotify-link hidden" href="#" target="_blank" rel="noreferrer">Open in Spotify ↗</a>
+          </div>
+          <div id="live-dot" class="live-dot" title="Polling every 30 seconds" aria-label="Polling every 30 seconds"></div>
+        </article>
+
+        <div class="workspace-grid">
+          <section class="bio-builder card" aria-labelledby="builder-title">
+            <div class="section-heading">
+              <div>
+                <span class="step">03</span>
+                <h2 id="builder-title">Build your bio</h2>
+              </div>
+              <span id="bio-count" class="count">0 / 80</span>
+            </div>
+
+            <div class="preview-box">
+              <span class="preview-label">TIKTOK BIO PREVIEW</span>
+              <p id="bio-preview">Connect Spotify to generate a bio.</p>
+              <span id="bio-warning" class="warning hidden"></span>
+            </div>
+
+            <label class="field">
+              <span>Style</span>
+              <select id="template">
+                <option value="🎧 {track} — {artist}">🎧 Track — Artist</option>
+                <option value="now playing: {track} · {artist}">now playing: Track · Artist</option>
+                <option value="on repeat: {track} by {artist}">on repeat: Track by Artist</option>
+                <option value="✦ {track} / {artist}">✦ Track / Artist</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Character limit</span>
+              <input id="max-length" type="number" min="10" max="150" value="80" />
+              <small>80 is a practical default. Adjust it if TikTok changes the limit for your account or region.</small>
+            </label>
+
+            <div class="button-row">
+              <button id="copy-bio" class="button button-primary" type="button" disabled>Copy bio <span aria-hidden="true">⧉</span></button>
+              <button id="open-tiktok" class="button button-secondary" type="button">Open TikTok ↗</button>
+            </div>
+            <p id="copy-message" class="form-message" role="status"></p>
+          </section>
+
+          <aside class="how-it-works card" aria-labelledby="how-title">
+            <span class="step">04</span>
+            <h2 id="how-title">Finish in TikTok</h2>
+            <ol>
+              <li><span>01</span><p>Play a track on Spotify.</p></li>
+              <li><span>02</span><p>Copy the generated bio.</p></li>
+              <li><span>03</span><p>Open TikTok and edit your profile.</p></li>
+              <li><span>04</span><p>Paste, save, done.</p></li>
+            </ol>
+            <button id="disconnect-button" class="text-button danger-button" type="button">Disconnect Spotify</button>
+          </aside>
+        </div>
+
+        <p id="app-status" class="app-status" role="status"></p>
+      </section>
+
+      <section class="privacy-row" aria-label="Privacy details">
+        <span>⌁ No server</span>
+        <span>⌁ No Client Secret</span>
+        <span>⌁ Your tokens stay in this browser session</span>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>BioSync</span>
+      <span>Made for the song you are on right now.</span>
+    </footer>
+  </body>
+</html>
