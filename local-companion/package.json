@@ -1,0 +1,12 @@
+{
+  "name": "biosync-local-companion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local Spotify watcher for the BioSync Opera extension.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.cjs"
+  }
+}
