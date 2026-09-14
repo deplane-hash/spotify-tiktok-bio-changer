@@ -173,7 +173,7 @@ async function getCurrentTrack() {
 function clearCurrentTrack() {
   state.nowPlaying = null;
   state.candidate = null;
-  if (!state.sync || !state.sync.ready) state.sync = null;
+  state.sync = null;
 }
 
 async function inspectSpotify() {
@@ -291,7 +291,7 @@ function readBody(request) {
 }
 
 function updateSettings(next) {
-  if (typeof next.clientId === "string") settings.clientId = next.clientId.trim();
+  if (typeof next.clientId === "string" && next.clientId.trim()) settings.clientId = next.clientId.trim();
   if (typeof next.baseBio === "string") settings.baseBio = next.baseBio.slice(0, 240);
   if (typeof next.template === "string") settings.template = next.template.slice(0, 160);
   if (Number.isFinite(Number(next.maxLength))) settings.maxLength = Math.max(10, Math.min(150, Number(next.maxLength)));
