@@ -4,7 +4,7 @@
   const SPOTIFY_AUTHORIZE_URL = "https://accounts.spotify.com/authorize";
   const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
   const SPOTIFY_API_URL = "https://api.spotify.com/v1";
-  const SCOPES = "user-read-currently-playing user-read-private";
+  const SCOPES = "user-read-currently-playing";
   const POLL_INTERVAL_MS = 30000;
   const DEFAULT_LIMIT = 80;
 
