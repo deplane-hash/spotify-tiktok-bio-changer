@@ -1,4 +1,5 @@
 const $ = (id) => document.getElementById(id);
+let clientIdConfigured = false;
 
 async function request(path, options) {
   const response = await fetch(path, {
@@ -30,7 +31,8 @@ function render(status) {
   $("template").value = config.template || "🎧 {track} — {artist}";
   $("max-length").value = config.maxLength || 80;
   $("stable-seconds").value = config.stableSeconds || 25;
-  $("client-id").value = status.configured ? $("client-id").value : "";
+  clientIdConfigured = Boolean(status.configured);
+  if (!clientIdConfigured) $("client-id").value = "";
 }
 
 async function refresh() {
@@ -46,7 +48,7 @@ $("save").addEventListener("click", async () => {
     const status = await request("/v1/settings", {
       method: "POST",
       body: JSON.stringify({
-        clientId: $("client-id").value.trim(),
+        ...( $("client-id").value.trim() ? { clientId: $("client-id").value.trim() } : {} ),
         baseBio: $("base-bio").value,
         template: $("template").value,
         maxLength: Number($("max-length").value),
